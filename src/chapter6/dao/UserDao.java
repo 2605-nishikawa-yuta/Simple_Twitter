@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.exception.NoRowsUpdatedRuntimeException;
 import chapter6.exception.SQLRuntimeException;
@@ -182,19 +184,30 @@ public class UserDao {
             sql.append("    account = ?, ");
             sql.append("    name = ?, ");
             sql.append("    email = ?, ");
-            sql.append("    password = ?, ");
+            //
+            if (StringUtils.isNotEmpty(user.getPassword())) {
+                sql.append("    password = ?, ");
+            }
             sql.append("    description = ?, ");
             sql.append("    updated_date = CURRENT_TIMESTAMP ");
             sql.append("WHERE id = ?");
 
             ps = connection.prepareStatement(sql.toString());
 
-            ps.setString(1, user.getAccount());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, user.getDescription());
-            ps.setInt(6, user.getId());
+            // パスワードの有無でプレースホルダー（?）の数が動的に変わるため、
+            // 直接数値を指定せず変数 i を使って自動でインデックスをインクリメントする
+            int i = 1;
+
+            ps.setString(i++, user.getAccount());
+            ps.setString(i++, user.getName());
+            ps.setString(i++, user.getEmail());
+
+            if (StringUtils.isNotEmpty(user.getPassword())) {
+                ps.setString(i++, user.getPassword());
+            }
+
+            ps.setString(i++, user.getDescription());
+            ps.setInt(i++, user.getId());
 
             int count = ps.executeUpdate();
             if (count == 0) {
