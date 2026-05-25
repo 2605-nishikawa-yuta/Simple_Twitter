@@ -119,9 +119,18 @@ public class SettingServlet extends HttpServlet {
         } else if (20 < account.length()) {
             errorMessages.add("アカウント名は20文字以下で入力してください");
         }
+
+        // 画面から入力されたアカウント名を使って、すでに同じ名前のユーザーがDBにいるかをチェック
+        User duplicateUser = new UserService().select(account);
+
+        // DBを検索した結果、同じアカウント名を持つ人が存在し、かつそれが「自分以外のユーザー」である場合
+        if (duplicateUser != null && duplicateUser.getId() != user.getId()) {
+            errorMessages.add("すでに存在するアカウントです");
+        }
+
         if (StringUtils.isEmpty(email)) {
 		errorMessages.add("メールアドレスを入力してください");
-	  } else if (!StringUtils.isEmpty(email) && (50 < email.length())) {
+	    } else if (!StringUtils.isEmpty(email) && (50 < email.length())) {
             errorMessages.add("メールアドレスは50文字以下で入力してください");
         }
 

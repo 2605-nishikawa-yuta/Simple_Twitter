@@ -63,6 +63,7 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
         new UserService().insert(user);
+
         response.sendRedirect("./");
     }
 
@@ -100,6 +101,14 @@ public class SignUpServlet extends HttpServlet {
             errorMessages.add("アカウント名を入力してください");
         } else if (20 < account.length()) {
             errorMessages.add("アカウント名は20文字以下で入力してください");
+        }
+
+        // 画面から入力されたアカウント名を使って、すでに同じ名前のユーザーがDBにいるかをチェック
+        User duplicateUser = new UserService().select(account);
+
+        // nullじゃない（＝すでに同じアカウント名を持つ人が見つかった）場合
+        if (duplicateUser != null) {
+            errorMessages.add("すでに存在するアカウントです");
         }
 
         if (StringUtils.isEmpty(password)) {
