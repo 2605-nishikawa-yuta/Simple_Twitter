@@ -77,6 +77,13 @@
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 				</div>
+
+	    <c:if test="${ message.userId == loginUser.id }">
+          <form action="deleteMessage" method="post">
+             <input type="hidden" name="id" value="${message.id}">
+             <input type="submit" value="削除" />
+          </form>
+         </c:if>
 			</c:forEach>
 		</div>
 
