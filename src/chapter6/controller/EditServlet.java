@@ -39,9 +39,27 @@ public class EditServlet extends HttpServlet {
         log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-        // 🌟 if文を全部取っ払って、純粋な更新処理だけにする！
         String text = request.getParameter("text");
         int id = Integer.parseInt(request.getParameter("id"));
+
+        java.util.List<String> errorMessages = new java.util.ArrayList<String>();
+
+        if (text == null || text.trim().replaceAll("^[\\s\\p{Z}]+$", "").isEmpty()) {
+            errorMessages.add("入力してください");
+        } else if (text.length() > 140) {
+            errorMessages.add("140文字以下で入力してください");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            Message message = new Message();
+            message.setId(id);
+            message.setText(text);
+
+            request.setAttribute("errorMessages", errorMessages);
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("edit.jsp").forward(request, response);
+            return;
+        }
 
         Message message = new Message();
         message.setId(id);
@@ -51,6 +69,7 @@ public class EditServlet extends HttpServlet {
 
         response.sendRedirect("./");
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
@@ -58,12 +77,33 @@ public class EditServlet extends HttpServlet {
         log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-        int id = Integer.parseInt(request.getParameter("id"));
+        javax.servlet.http.HttpSession session = request.getSession();
+        java.util.List<String> errorMessages = new java.util.ArrayList<String>();
 
-        Message message = new MessageService().select(id);
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                throw new NumberFormatException();
+            }
 
-        request.setAttribute("message", message);
-        request.getRequestDispatcher("edit.jsp").forward(request, response);
+            int id = Integer.parseInt(idParam);
+
+            Message message = new MessageService().select(id);
+            if (message == null) {
+                errorMessages.add("不正なパラメータが入力されました");
+                session.setAttribute("errorMessages", errorMessages);
+                response.sendRedirect("./");
+                return;
+            }
+
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("edit.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            errorMessages.add("不正なパラメータが入力されました");
+            session.setAttribute("errorMessages", errorMessages);
+            response.sendRedirect("./");
+        }
     }
 }
 

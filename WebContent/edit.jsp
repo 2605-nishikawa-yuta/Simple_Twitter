@@ -1,22 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false" %> <!DOCTYPE html>
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<link href="./css/style.css" rel="stylesheet" type="text/css">
 <title>つぶやき編集</title>
 </head>
 <body>
-<form action="edit" method="post">
+    <c:if test="${ not empty errorMessages }">
+        <div class="errorMessages">
+            <ul>
+                <c:forEach items="${errorMessages}" var="errorMessage">
+                    <li><c:out value="${errorMessage}" /></li>
+                </c:forEach>
+            </ul>
+        </div>
+    </c:if>
 
-    <input type="hidden" name="id" value="${message.id}">
+    <form action="edit" method="post">
 
-    いま、どうしてる？（編集モード）<br />
+        <input type="hidden" name="id" value="${message.id}">
 
-    <textarea name="text" cols="100" rows="5" class="tweet-box">${message.text}</textarea>
+        つぶやき<br />
 
-    <br/>
-    <input type="submit" name="update" value="更新">
-</form>
+        <textarea name="text" cols="100" rows="5" class="tweet-box">${message.text}</textarea>
+
+        <br/>
+        <input type="submit" name="update" value="更新">
+        <a href="./">戻る</a>
+    </form>
+
+    <div class="copyright">Copyright(c)yuta nishikawa</div>
 </body>
 </html>

@@ -79,9 +79,8 @@
 				<c:if test="${ message.userId == loginUser.id }">
 
 					<form action="edit" method= "get">
-						<input type="hidden" name="id" value="${message.id}">
-						<input type="submit"name= "display" value="編集" />
-				    </form>
+                      <button type="button" onclick="location.href='edit?id=${message.id}'">編集</button>
+                    </form>
 			    </c:if>
 				<c:if test="${ message.userId == loginUser.id }">
 					<form action="deleteMessage" method="post">
