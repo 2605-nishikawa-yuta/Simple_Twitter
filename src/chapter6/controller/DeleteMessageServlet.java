@@ -1,8 +1,6 @@
 package chapter6.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -10,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
@@ -39,15 +36,9 @@ public class DeleteMessageServlet extends HttpServlet {
 		  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 	        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-	        HttpSession session = request.getSession();
-	        List<String> errorMessages = new ArrayList<String>();
-
-	        String text = request.getParameter("id");
-
 	        int id = (Integer.parseInt(request.getParameter("id")));
 	        new MessageService().delete(id);
 
 	            response.sendRedirect("./");
-	            return;
 	    }
 }

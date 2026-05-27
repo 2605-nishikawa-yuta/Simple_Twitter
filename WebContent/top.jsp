@@ -1,5 +1,4 @@
-<%@page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page isELIgnored="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -43,7 +42,7 @@
 			<div class="errorMessages">
 				<ul>
 					<c:forEach items="${errorMessages}" var="errorMessage">
-						<li><c:out value="${errorMessage}" />
+						<li><c:out value="${errorMessage}" /></li>
 					</c:forEach>
 				</ul>
 			</div>
@@ -60,37 +59,57 @@
 			</c:if>
 		</div>
 
-<div class="messages">
-		<c:forEach items="${messages}" var="message">
-			<div class="message">
-				<div class="account-name">
-					<span class="account">
-						<a href="./?user_id=<c:out value="${message.userId}"/>"><c:out value="${message.account}" /></a>
-					</span>
-					<span class="name"><c:out value="${message.name}" /></span>
-				</div>
-				<div class="text">
-					<c:out value="${message.text}" />
-				</div>
-				<div class="date">
-					<fmt:formatDate value="${message.createdDate}"
-						pattern="yyyy/MM/dd HH:mm:ss" />
-				</div>
-				<c:if test="${ message.userId == loginUser.id }">
+		<div class="messages">
+			<c:forEach items="${messages}" var="message">
+				<div class="message">
+					<div class="account-name">
+						<span class="account">
+							<a href="./?user_id=<c:out value="${message.userId}"/>"><c:out value="${message.account}" /></a>
+						</span>
+						<span class="name"><c:out value="${message.name}" /></span>
+					</div>
+					<div class="text">
+						<c:out value="${message.text}" />
+					</div>
+					<div class="date">
+						<fmt:formatDate value="${message.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />
+					</div>
 
-					<form action="edit" method= "get">
-                      <button type="button" onclick="location.href='edit?id=${message.id}'">編集</button>
-                    </form>
-			    </c:if>
-				<c:if test="${ message.userId == loginUser.id }">
-					<form action="deleteMessage" method="post">
-						<input type="hidden" name="id" value="${message.id}">
-						<input type="submit" value="削除" />
-					</form>
-				</c:if>
-			</div>
-		</c:forEach>
-	</div>
+					<c:if test="${ message.userId == loginUser.id }">
+						<form action="edit" method="get">
+							<button type="button" onclick="location.href='edit?id=${message.id}'">編集</button>
+						</form>
+					</c:if>
+
+					<c:if test="${ message.userId == loginUser.id }">
+						<form action="deleteMessage" method="post">
+							<input type="hidden" name="id" value="${message.id}">
+							<input type="submit" value="削除" />
+						</form>
+					</c:if>
+
+					<c:forEach items="${comments}" var="comment">
+						<c:if test="${ comment.messageId == message.id }">
+							<div class="reply" style="margin-left: 30px; border-left: 2px solid #ccc; padding-left: 10px; margin-top: 5px; margin-bottom: 5px;">
+								<span class="reply-name" style="font-weight: bold;"><c:out value="${comment.name}" /></span>
+								<span class="reply-text"><c:out value="${comment.text}" /></span>
+								<span class="reply-date" style="font-size: 0.8em; color: #888;">
+									<fmt:formatDate value="${comment.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />
+								</span>
+							</div>
+						</c:if>
+					</c:forEach>
+
+					<div class="reply-form">
+						<form action="comment" method="post">
+							<input type="hidden" name="messageId" value="${message.id}">
+							<textarea name="text" rows="2" cols="40" placeholder="返信を入力（140文字まで）"></textarea>
+							<input type="submit" value="返信" />
+						</form>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
 
 		<div class="copyright">Copyright(c)yuta nishikawa</div>
 	</div>
