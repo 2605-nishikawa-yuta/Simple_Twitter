@@ -16,10 +16,11 @@
                 <div class="errorMessages">
                     <ul>
                         <c:forEach items="${errorMessages}" var="errorMessage">
-                            <li><c:out value="${errorMessage}" />
+                            <li><c:out value="${errorMessage}" /></li>
                         </c:forEach>
                     </ul>
                 </div>
+                <c:remove var="errorMessages" scope="session" />
             </c:if>
 
             <form action="login" method="post"><br />
@@ -33,7 +34,7 @@
                 <a href="./">戻る</a>
             </form>
 
-            <div class="copyright"> Copyright(c)YourName</div>
+            <div class="copyright">Copyright(c)YourName</div>
         </div>
     </body>
 </html>

@@ -50,12 +50,12 @@
 		</c:if>
 
 		<form action="./" method="get">
-		    日付
-		    <input type="date" name="start">
-		    〜
-		    <input type="date" name="end">
+			日付
+			<input type="date" name="start" value="${param.start}">
+			〜
+			<input type="date" name="end" value="${param.end}">
 
-		    <input type="submit" value="絞込">
+			<input type="submit" value="絞込">
 		</form>
 
 		<div class="form-area">
@@ -109,13 +109,15 @@
 						</c:if>
 					</c:forEach>
 
-					<div class="reply-form">
-						<form action="comment" method="post">
-							<input type="hidden" name="messageId" value="${message.id}">
-							<textarea name="text" rows="2" cols="40" placeholder="返信を入力（140文字まで）"></textarea>
-							<input type="submit" value="返信" />
-						</form>
-					</div>
+					<c:if test="${ isShowMessageForm }">
+						<div class="reply-form">
+							<form action="comment" method="post">
+								<input type="hidden" name="messageId" value="${message.id}">
+								<textarea name="text" rows="2" cols="40" placeholder="返信を入力（140文字まで）"></textarea>
+								<input type="submit" value="返信" />
+							</form>
+						</div>
+					</c:if>
 				</div>
 			</c:forEach>
 		</div>
