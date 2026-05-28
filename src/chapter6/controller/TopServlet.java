@@ -52,8 +52,10 @@ public class TopServlet extends HttpServlet {
 
         //ここで画面（リクエスト）から「user_id」を受け取る
         String userId = request.getParameter("user_id");
+        String start = request.getParameter("start");
+        String end = request.getParameter("end");
 
-        List<UserMessage> messages = new MessageService().select(userId);
+        List<UserMessage> messages = new MessageService().select(userId,start,end);
 
         List<UserComment> comments = new CommentService().select();
 
